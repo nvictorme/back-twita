@@ -1,5 +1,3 @@
-import * as admin from 'firebase-admin';
-import Timestamp = admin.firestore.Timestamp;
 import {PostTypes} from './enumerations';
 
 export interface UserRoles {
@@ -21,7 +19,7 @@ export interface UserData {
     uid?: string;
 }
 
-export interface Media {
+export interface PostMedia {
     fileName?: string;
     url?: string;
     code?: string;
@@ -34,10 +32,11 @@ export interface PostMeta {
 }
 
 export interface Post {
+    id?: string;
     authorId: string;
-    createdAt: Timestamp;
+    createdAt: Date;
     description: string;
-    media?: Media;
+    media?: PostMedia;
     meta: PostMeta;
     title: string;
     tags?: string[];
