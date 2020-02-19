@@ -4,3 +4,4 @@ admin.initializeApp();
 
 // TRIGGERS
 export * from './triggers/auth.triggers';
+export * from './triggers/post.triggers';

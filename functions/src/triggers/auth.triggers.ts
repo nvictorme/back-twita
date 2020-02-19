@@ -8,7 +8,7 @@ import {initRoles, initUserData} from "../helpers";
 const auth = admin.auth();
 const db = admin.firestore();
 
-export const initializeUser = functions.auth.user().onCreate(async (user: UserRecord, context: EventContext) => {
+export const onUserCreated = functions.auth.user().onCreate(async (user: UserRecord, context: EventContext) => {
     try {
         const userData: UserData = initUserData(user);
         await auth.setCustomUserClaims(user.uid, {roles: initRoles()});
