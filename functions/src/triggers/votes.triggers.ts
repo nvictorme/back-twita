@@ -8,8 +8,10 @@ export const onPostVoteCreated = functions.firestore.document('posts/{pid}/votes
     .onCreate(async (snapshot: DocumentSnapshot, context: EventContext) => {
         try {
             const postId: string | undefined = snapshot.ref.parent.parent?.id;
-            const vote: any = {...snapshot.data()} ?? {};
-            if (postId && vote.hasOwnProperty('up') && vote.hasOwnProperty('down')) {
+            const vote: any = {...snapshot.data()};
+            // Users can't vote for themselves
+            if (vote.uid === vote.authorId) return;
+            if (postId) {
                 await processVote(``, vote);
             }
         } catch (e) {
@@ -24,6 +26,8 @@ export const onPostVoteUpdated = functions.firestore.document('posts/{pid}/votes
             const voteBefore: any = {...change.before.data()};
             const voteAfter: any = {...change.after.data()};
             const authorId: string = voteAfter.authorId;
+            // Users can't vote for themselves
+            if (voteAfter.uid === authorId) return;
             // if both are false it means the user removed any votes
             if (!voteAfter.up && !voteAfter.down) {
                 // update the one that was removed
