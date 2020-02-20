@@ -34,19 +34,16 @@ export const onFavoriteDeleted = functions.firestore.document('users/{uid}/favor
         try {
             const {pid, authorId, uid} = snapshot.data() ?? {};
             if (authorId === uid) return; // if author === owner, then don't do anything
-            if (authorId) {
-                await db.collection('users').doc(authorId).set({
-                    meta: {
-                        hearts: admin.firestore.FieldValue.increment(-1)
-                    }
-                }, {merge: true});
-            }
             if (pid) {
-                await db.collection('posts').doc(pid).set({
-                    meta: {
-                        hearts: admin.firestore.FieldValue.increment(-1)
-                    }
-                }, {merge: true});
+                const postRef = db.doc(`posts/${pid}`);
+                const postDoc = await postRef.get();
+                if (postDoc.exists) {
+                    await db.collection('posts').doc(pid).set({
+                        meta: {
+                            hearts: admin.firestore.FieldValue.increment(-1)
+                        }
+                    }, {merge: true});
+                }
             }
         } catch (e) {
             console.error(e);

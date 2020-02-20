@@ -5,5 +5,6 @@ admin.initializeApp();
 // TRIGGERS
 export * from './triggers/auth.triggers';
 export * from './triggers/posts.triggers';
+export * from './triggers/comments.triggers';
 export * from './triggers/favorites.triggers';
 export * from './triggers/votes.triggers';
