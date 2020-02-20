@@ -8,7 +8,7 @@ const db = admin.firestore();
 export const onPostCreated = functions.firestore.document('posts/{pid}')
     .onCreate(async (snapshot: DocumentSnapshot, context: EventContext) => {
         try {
-            const data = snapshot.data() ?? {};
+            const data: any = {...snapshot.data()} ?? {};
             if (data.hasOwnProperty('authorId')) {
                 await db.collection('users').doc(data.authorId).set({
                     meta: {
@@ -24,9 +24,9 @@ export const onPostCreated = functions.firestore.document('posts/{pid}')
 export const onPostCommentCreated = functions.firestore.document('posts/{pid}/comments/{cid}')
     .onCreate(async (snapshot: DocumentSnapshot, context: EventContext) => {
         try {
-            const parentId: string | undefined = snapshot.ref.parent.parent?.id;
-            if (parentId) {
-                await db.collection('posts').doc(parentId).set({
+            const postId: string | undefined = snapshot.ref.parent.parent?.id;
+            if (postId) {
+                await db.collection('posts').doc(postId).set({
                     meta: {
                         comments: admin.firestore.FieldValue.increment(1)
                     }
@@ -40,9 +40,9 @@ export const onPostCommentCreated = functions.firestore.document('posts/{pid}/co
 export const onPostCommentDeleted = functions.firestore.document('posts/{pid}/comments/{cid}')
     .onDelete(async (snapshot: DocumentSnapshot, context: EventContext) => {
         try {
-            const parentId: string | undefined = snapshot.ref.parent.parent?.id;
-            if (parentId) {
-                await db.collection('posts').doc(parentId).set({
+            const postId: string | undefined = snapshot.ref.parent.parent?.id;
+            if (postId) {
+                await db.collection('posts').doc(postId).set({
                     meta: {
                         comments: admin.firestore.FieldValue.increment(-1)
                     }

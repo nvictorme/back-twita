@@ -73,4 +73,5 @@ export interface Vote {
     up: boolean;
     down: boolean;
     uid?: string;
+    authorId?: string;
 }
