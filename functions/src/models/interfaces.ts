@@ -1,4 +1,4 @@
-import {PostTypes} from './enumerations';
+import {FlagStatus, PostTypes} from './enumerations';
 
 export interface UserRoles {
     admin: boolean;
@@ -74,4 +74,28 @@ export interface Vote {
     down: boolean;
     uid?: string;
     authorId?: string;
+}
+
+export interface FlagReport {
+    nudity?: boolean;
+    violence?: boolean;
+    harassment?: boolean;
+    suicideOrSelfInjury?: boolean;
+    fakeNews?: boolean;
+    spam?: boolean;
+    intellectualProperty?: boolean;
+    unauthorizedSales?: boolean;
+    hateSpeech?: boolean;
+    terrorism?: boolean;
+    propaganda?: boolean;
+    other?: boolean;
+    comment: string;
+    authorId?: string;
+    postId?: string;
+    isComment?: boolean;
+    parentId?: string;
+    reporterId?: string;
+    status?: FlagStatus;
+    resolution?: string;
+    solverId?: string;
 }

@@ -26,3 +26,11 @@ export enum PostTypes {
     Video,
     Audio
 }
+
+export enum FlagStatus {
+    open,
+    processing,
+    hold,
+    solved,
+    closed
+}
