@@ -2,8 +2,10 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import EventContext = functions.EventContext;
 import {DocumentSnapshot} from "firebase-functions/lib/providers/firestore";
+import {Post, UserData} from "../models/interfaces";
 
 const db = admin.firestore();
+const messaging = admin.messaging();
 
 export const onPostCommentCreated = functions.firestore.document('posts/{pid}/comments/{cid}')
     .onCreate(async (snapshot: DocumentSnapshot, context: EventContext) => {
@@ -15,6 +17,24 @@ export const onPostCommentCreated = functions.firestore.document('posts/{pid}/co
                         comments: admin.firestore.FieldValue.increment(1)
                     }
                 }, {merge: true});
+                const parentPostDoc = await db.collection('posts').doc(postId).get();
+                const {authorId, title} = {...parentPostDoc.data()} as Post;
+                const authorSnap = await db.collection('users').doc(authorId).get();
+                const {fcmTokens} = {...authorSnap.data()} as UserData;
+                if (fcmTokens) {
+                    if (fcmTokens.length) {
+                        await messaging.sendToDevice(fcmTokens, {
+                            data: {
+                                'type': 'new_comment_on_post',
+                                'post_id': postId
+                            },
+                            notification: {
+                                title: 'New Comment',
+                                body: `There's a new comment on your post '${title}'`
+                            }
+                        });
+                    }
+                }
             }
         } catch (e) {
             console.error(e);

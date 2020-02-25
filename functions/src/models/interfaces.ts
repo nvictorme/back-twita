@@ -20,6 +20,7 @@ export interface UserData {
     displayName: string;
     email: string;
     firstName?: string;
+    fcmTokens?: string[];
     lastName?: string;
     phoneNumber?: string;
     photoURL?: string;
