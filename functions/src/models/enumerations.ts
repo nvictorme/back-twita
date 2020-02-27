@@ -7,8 +7,7 @@
 export enum ImageSize {
     small = 250,
     medium = 500,
-    large = 1000,
-    full = 2000
+    large = 1000
 }
 
 export enum AuthProviders {

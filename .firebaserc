@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "twita-dev"
+    "default": "twita-dev",
+    "production": "twita-network"
   }
 }
